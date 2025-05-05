@@ -34,18 +34,30 @@ askButton.addEventListener("click", async () => {
   showLoadingDots();
 
   try {
-    const response = await fetch("https://ai-tutor-for-kids-1.onrender.com", {
+    const response = await fetch("https://ai-tutor-for-kids-1.onrender.com/ask", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question })
+      body: JSON.stringify({ question, session_id: "default" }) // You must include `session_id`
     });
 
+    // Check if response is OK
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
     const data = await response.json();
+
     stopLoadingDots();
-    answerDiv.innerHTML = "🎉 " + data.answer;
-    answerSound.play();
+
+    if (data.answer) {
+      answerDiv.innerHTML = "🎉 " + data.answer;
+      answerSound.play();
+    } else {
+      answerDiv.innerHTML = "⚠️ Couldn't find an answer.";
+      errorSound.play();
+    }
   } catch (error) {
-    console.error(error);
+    console.error("❌ Fetch Error:", error);
     stopLoadingDots();
     answerDiv.innerHTML = "⚠️ Oops! Something went wrong.";
     errorSound.play();
