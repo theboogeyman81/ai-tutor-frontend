@@ -3,124 +3,175 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🌈 AI Tutor for Kids</title>
+  <title>Curio – AI Owl Tutor</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       font-family: 'Comic Neue', 'Comic Sans MS', cursive, sans-serif;
-      background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
-      color: #4d2c91;
-      overflow-y: auto;
+      background-color: #1e1e1e;
+      color: #fcefb4;
+      overflow: hidden;
+    }
+
+    .starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .starfield::before {
+      content: '';
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 200%;
+      height: 200%;
+      background: transparent;
+      background-image: radial-gradient(white 1px, transparent 1px);
+      background-size: 20px 20px;
+      animation: moveStars 60s linear infinite;
+      opacity: 0.2;
+    }
+
+    @keyframes moveStars {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(100%); }
     }
 
     body {
       display: flex;
       justify-content: center;
-      align-items: flex-start;
-      padding: 40px 20px;
+      align-items: stretch;
+      height: 100vh;
+      z-index: 1;
+    }
+
+    .left, .right {
+      flex: 1;
+      padding: 40px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .left {
+      border-right: 2px solid #444;
     }
 
     .card {
-      background-color: #ffffffee;
-      padding: 30px 40px;
-      border-radius: 20px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      background-color: #2a2a2a;
+      padding: 30px;
+      border-radius: 24px;
       text-align: center;
-      max-width: 600px;
+      max-width: 400px;
       width: 100%;
-      animation: popIn 0.8s ease;
-    }
-
-    @keyframes popIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      color: #ff6f91;
-      text-shadow: 1px 1px #fff;
     }
 
     .mascot {
-      font-size: 3.5rem;
+      font-size: 4rem;
       margin-bottom: 10px;
-      animation: bounce 2s infinite;
+      animation: bounce 1.8s infinite;
     }
 
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #ffafcc;
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      color: #caffbf;
     }
 
     input {
       padding: 14px;
       font-size: 1rem;
-      width: 90%;
-      border: 2px solid #ffd166;
+      width: 100%;
+      border: 2px solid #8ecae6;
       border-radius: 12px;
-      margin: 15px 0;
+      background-color: #333;
+      color: #fefae0;
       outline: none;
-      transition: 0.3s;
-      background-color: #fffdf8;
+      margin-bottom: 15px;
     }
 
-    input:focus {
-      border-color: #f48fb1;
+    input::placeholder {
+      color: #bdbdbd;
     }
 
     button {
-      background-color: #8ecae6;
-      color: white;
+      background-color: #ffb703;
+      color: #000;
       border: none;
-      padding: 12px 24px;
-      font-size: 1.1rem;
-      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 1rem;
+      border-radius: 14px;
       cursor: pointer;
-      transition: background-color 0.3s;
     }
 
     button:hover {
-      background-color: #219ebc;
+      background-color: #fb8500;
+    }
+
+    #answerBox {
+      background-color: #2a2a2a;
+      padding: 30px;
+      border-radius: 24px;
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
     }
 
     #answer {
-      margin-top: 20px;
-      padding: 20px;
-      font-size: 1.2rem;
-      background-color: #f1f7f8;
-      border: 2px dashed #90e0ef;
-      border-radius: 15px;
-      min-height: 80px;
-      color: #1d3557;
-      animation: fadeIn 0.5s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      padding: 18px;
+      font-size: 1.1rem;
+      background-color: #3a3a3a;
+      border-radius: 12px;
+      color: #e0fbfc;
+      min-height: 70px;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="mascot">🦉</div>
-    <h1>Hi, I'm Curio the Owl!</h1>
-    <p>Ask me anything fun or tricky! 🎓✨</p>
-    <input type="text" id="questionInput" placeholder="Type your question here..." />
-    <button id="askButton">🪄 Ask Me</button>
-    <div id="answer">📝 I'm waiting for your question...</div>
+  <div class="starfield"></div>
+
+  <div class="left">
+    <div class="card">
+      <div class="mascot">🦉</div>
+      <h1>Hey, I'm Curio!</h1>
+      <p>Ask me your cool question ✨</p>
+      <input type="text" id="questionInput" placeholder="Type something fun..." />
+      <button id="askButton">🎤 Ask Me</button>
+    </div>
   </div>
 
-  <!-- Sound effects -->
+  <div class="right">
+    <div id="answerBox">
+      <h1>💡 Answer</h1>
+      <div id="answer">I'm here to help!</div>
+    </div>
+  </div>
+
   <audio id="clickSound" src="click-21156.mp3"></audio>
   <audio id="answerSound" src="ding-126626.mp3"></audio>
   <audio id="errorSound" src="dr-tom-065-36062.mp3"></audio>
 
-  <!-- External JS -->
   <script src="script.js"></script>
 </body>
 </html>
