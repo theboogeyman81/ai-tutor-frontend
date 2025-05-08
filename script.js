@@ -8,6 +8,13 @@ const errorSound = document.getElementById("errorSound");
 
 let loadingInterval;
 
+function playSound(sound) {
+  if (sound && typeof sound.play === "function") {
+    sound.currentTime = 0;
+    sound.play().catch(err => console.warn("Sound error:", err));
+  }
+}
+
 function showLoadingDots() {
   let dotCount = 0;
   loadingInterval = setInterval(() => {
@@ -23,43 +30,48 @@ function stopLoadingDots() {
 
 askButton.addEventListener("click", async () => {
   const question = questionInput.value.trim();
-  clickSound.play();
+  playSound(clickSound);
 
   if (!question) {
-    errorSound.play();
+    playSound(errorSound);
     answerDiv.innerHTML = "⚠️ Please type something!";
     return;
   }
 
   showLoadingDots();
+  askButton.disabled = true;
+  questionInput.disabled = true;
 
   try {
     const response = await fetch("https://ai-tutor-for-kids-1.onrender.com/ask", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question, session_id: "default" }) // You must include `session_id`
+      body: JSON.stringify({ question, session_id: "default" })
     });
 
-    // Check if response is OK
+    stopLoadingDots();
+    askButton.disabled = false;
+    questionInput.disabled = false;
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
 
-    stopLoadingDots();
-
     if (data.answer) {
       answerDiv.innerHTML = "🎉 " + data.answer;
-      answerSound.play();
+      playSound(answerSound);
     } else {
       answerDiv.innerHTML = "⚠️ Couldn't find an answer.";
-      errorSound.play();
+      playSound(errorSound);
     }
   } catch (error) {
     console.error("❌ Fetch Error:", error);
     stopLoadingDots();
+    askButton.disabled = false;
+    questionInput.disabled = false;
     answerDiv.innerHTML = "⚠️ Oops! Something went wrong.";
-    errorSound.play();
+    playSound(errorSound);
   }
 });
