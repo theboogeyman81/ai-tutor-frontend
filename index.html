@@ -141,6 +141,39 @@
       background-color: transparent;
     }
 
+    /* Loader animation */
+    .loader {
+      text-align: center;
+      font-size: 2rem;
+      color: #ffffff;
+      letter-spacing: 4px;
+      margin-top: 40px;
+    }
+
+    .loader span {
+      animation: bounceLoader 1.5s infinite ease-in-out;
+      display: inline-block;
+    }
+
+    .loader span:nth-child(1) {
+      animation-delay: 0s;
+    }
+    .loader span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    .loader span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes bounceLoader {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -164,36 +197,6 @@
     </div>
   </div>
 
-  <script>
-    const askButton = document.getElementById('askButton');
-    const input = document.getElementById('questionInput');
-    const answerBox = document.getElementById('answer');
-
-    askButton.addEventListener('click', () => {
-      const question = input.value.trim();
-      if (question === '') {
-        answerBox.innerHTML = "😅 Please ask something!";
-        return;
-      }
-
-      // Dummy response
-      if (question.toLowerCase().includes('gravity')) {
-        answerBox.innerHTML = `
-          🚀 Hey there, future astronaut! 🌌 Want to know about gravity? It’s super cool!<br><br>
-          Imagine you're holding a bouncy ball. When you let go, *whoosh*! It falls to the ground, right? That’s gravity!
-          It’s like an invisible force that pulls everything down towards the Earth.
-          Think of it as a giant, friendly hug from the planet! 🤗<br><br>
-          Even you are being hugged by gravity! That’s why you stay on the ground and don’t float away into space!<br>
-          The Earth is so big and strong, its gravity is super powerful. It's not just the Earth that has gravity. The sun has gravity too!
-          That’s what keeps all the planets spinning around it. It’s like a giant cosmic game of keep-away! ☀️<br><br>
-          **Learning Suggestion:** Draw a picture of what would happen if there was no gravity at all! 🚫🌍
-        `;
-      } else {
-        answerBox.innerHTML = `✨ That's a great question! I'm still learning how to answer that — but stay curious! 💡`;
-      }
-
-      input.value = '';
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
