@@ -12,68 +12,41 @@
       font-family: 'Comic Neue', 'Comic Sans MS', cursive, sans-serif;
       background-color: #1e1e1e;
       color: #fcefb4;
-      overflow: hidden;
+      overflow-y: auto;
     }
 
-    .starfield {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: 0;
-    }
-
-    .starfield::before {
-      content: '';
-      position: absolute;
-      top: -100%;
-      left: 0;
-      width: 200%;
-      height: 200%;
-      background: transparent;
-      background-image: radial-gradient(white 1px, transparent 1px);
-      background-size: 20px 20px;
-      animation: moveStars 60s linear infinite;
-      opacity: 0.2;
-    }
-
-    @keyframes moveStars {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(100%); }
-    }
-
-    body {
+    .container {
       display: flex;
-      justify-content: center;
-      align-items: stretch;
+      flex-direction: row;
       height: 100vh;
-      z-index: 1;
+      overflow-y: auto;
     }
 
-    .left, .right {
-      flex: 1;
-      padding: 40px;
+    .left-panel, .right-panel {
+      width: 50%;
+      padding: 40px 20px;
       box-sizing: border-box;
+    }
+
+    .left-panel {
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      z-index: 2;
-    }
-
-    .left {
-      border-right: 2px solid #444;
     }
 
     .card {
       background-color: #2a2a2a;
-      padding: 30px;
+      padding: 30px 30px;
       border-radius: 24px;
       text-align: center;
-      max-width: 400px;
       width: 100%;
+      max-width: 500px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #ffafcc;
     }
 
     .mascot {
@@ -85,12 +58,6 @@
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-8px); }
-    }
-
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 10px;
-      color: #ffafcc;
     }
 
     p {
@@ -129,49 +96,50 @@
       background-color: #fb8500;
     }
 
-    #answerBox {
-      background-color: #2a2a2a;
-      padding: 30px;
-      border-radius: 24px;
-      text-align: center;
-      max-width: 400px;
-      width: 100%;
+    .right-panel {
+      background-color: #262626;
+      overflow-y: auto;
+      padding: 40px;
     }
 
     #answer {
-      padding: 18px;
-      font-size: 1.1rem;
-      background-color: #3a3a3a;
-      border-radius: 12px;
+      font-size: 1.2rem;
+      line-height: 1.6;
       color: #e0fbfc;
-      min-height: 70px;
+      background-color: #3a3a3a;
+      padding: 24px;
+      border-radius: 16px;
+      max-height: calc(100vh - 80px);
+      overflow-y: auto;
     }
   </style>
 </head>
 <body>
-  <div class="starfield"></div>
+  <div class="container">
+    <!-- Left Panel (Input) -->
+    <div class="left-panel">
+      <div class="card">
+        <div class="mascot">🦉</div>
+        <h1>Hey, I'm Curio!</h1>
+        <p>Ask me your cool question ✨</p>
+        <input type="text" id="questionInput" placeholder="Type something fun..." />
+        <button id="askButton">🎤 Ask Me</button>
+      </div>
+    </div>
 
-  <div class="left">
-    <div class="card">
-      <div class="mascot">🦉</div>
-      <h1>Hey, I'm Curio!</h1>
-      <p>Ask me your cool question ✨</p>
-      <input type="text" id="questionInput" placeholder="Type something fun..." />
-      <button id="askButton">🎤 Ask Me</button>
+    <!-- Right Panel (Answer) -->
+    <div class="right-panel">
+      <div id="answer">💡 I'm here to help!</div>
     </div>
   </div>
 
-  <div class="right">
-    <div id="answerBox">
-      <h1>💡 Answer</h1>
-      <div id="answer">I'm here to help!</div>
-    </div>
-  </div>
-
+  <!-- Optional Sounds -->
   <audio id="clickSound" src="click-21156.mp3"></audio>
   <audio id="answerSound" src="ding-126626.mp3"></audio>
   <audio id="errorSound" src="dr-tom-065-36062.mp3"></audio>
 
+  <!-- Script -->
   <script src="script.js"></script>
 </body>
 </html>
+  
