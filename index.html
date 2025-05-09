@@ -30,23 +30,46 @@
 
     .container {
       display: flex;
-      flex-direction: row;
       height: 100vh;
       width: 100vw;
+      transition: all 1s ease;
     }
 
     .left-panel, .right-panel {
-      width: 50%;
+      height: 100%;
       padding: 20px;
       box-sizing: border-box;
       overflow-y: auto;
       backdrop-filter: blur(6px);
     }
 
-    .left-panel {
-      display: flex;
+    /* Initial state: center the left panel */
+    .container.start .left-panel {
+      width: 100vw;
       justify-content: center;
       align-items: center;
+      display: flex;
+    }
+
+    .container.start .right-panel {
+      display: none;
+    }
+
+    /* Active state after input: side-by-side layout */
+    .container.active .left-panel {
+      width: 50vw;
+      display: flex;
+    }
+
+    .container.active .right-panel {
+      display: block;
+      width: 50vw;
+      animation: slideIn 1s ease forwards;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
     }
 
     .card {
@@ -112,10 +135,6 @@
       background-color: #fb8500;
     }
 
-    .right-panel {
-      padding: 40px;
-    }
-
     #answer {
       font-size: 1.2rem;
       line-height: 1.6;
@@ -140,44 +159,10 @@
     .right-panel::-webkit-scrollbar-track, .left-panel::-webkit-scrollbar-track {
       background-color: transparent;
     }
-
-    /* Loader animation */
-    .loader {
-      text-align: center;
-      font-size: 2rem;
-      color: #ffffff;
-      letter-spacing: 4px;
-      margin-top: 40px;
-    }
-
-    .loader span {
-      animation: bounceLoader 1.5s infinite ease-in-out;
-      display: inline-block;
-    }
-
-    .loader span:nth-child(1) {
-      animation-delay: 0s;
-    }
-    .loader span:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-    .loader span:nth-child(3) {
-      animation-delay: 0.4s;
-    }
-
-    @keyframes bounceLoader {
-      0%, 100% {
-        transform: translateY(0px);
-      }
-      50% {
-        transform: translateY(-10px);
-      }
-    }
-
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container start" id="mainContainer">
     <!-- Left Panel -->
     <div class="left-panel">
       <div class="card">
@@ -197,6 +182,7 @@
     </div>
   </div>
 
+  <!-- External JS file -->
   <script src="script.js"></script>
 </body>
 </html>
