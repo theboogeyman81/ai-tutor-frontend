@@ -1,12 +1,16 @@
 const askButton = document.getElementById("askButton");
 const questionInput = document.getElementById("questionInput");
 const answerDiv = document.getElementById("answer");
+const mainContainer = document.getElementById("mainContainer");
 
 const clickSound = document.getElementById("clickSound");
 const answerSound = document.getElementById("answerSound");
 const errorSound = document.getElementById("errorSound");
 
 let loadingInterval;
+
+// Start in "start" mode
+mainContainer.classList.add("start");
 
 function playSound(sound) {
   if (sound && typeof sound.play === "function") {
@@ -28,7 +32,7 @@ function stopLoadingDots() {
   clearInterval(loadingInterval);
 }
 
-askButton.addEventListener("click", async () => {
+async function handleAsk() {
   const question = questionInput.value.trim();
   playSound(clickSound);
 
@@ -38,9 +42,14 @@ askButton.addEventListener("click", async () => {
     return;
   }
 
-  showLoadingDots();
+  // Activate layout transition
+  mainContainer.classList.remove("start");
+  mainContainer.classList.add("active");
+
   askButton.disabled = true;
   questionInput.disabled = true;
+  askButton.textContent = "Thinking...";
+  showLoadingDots();
 
   try {
     const response = await fetch("https://ai-tutor-for-kids-1.onrender.com/ask", {
@@ -52,6 +61,7 @@ askButton.addEventListener("click", async () => {
     stopLoadingDots();
     askButton.disabled = false;
     questionInput.disabled = false;
+    askButton.textContent = "🎤 Ask Me";
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -66,12 +76,27 @@ askButton.addEventListener("click", async () => {
       answerDiv.innerHTML = "⚠️ Couldn't find an answer.";
       playSound(errorSound);
     }
+
+    // Scroll to top
+    answerDiv.scrollTo({ top: 0, behavior: "smooth" });
+
   } catch (error) {
     console.error("❌ Fetch Error:", error);
     stopLoadingDots();
     askButton.disabled = false;
     questionInput.disabled = false;
+    askButton.textContent = "🎤 Ask Me";
     answerDiv.innerHTML = "⚠️ Oops! Something went wrong.";
     playSound(errorSound);
+  }
+}
+
+// Click event
+askButton.addEventListener("click", handleAsk);
+
+// Enter key triggers ask
+questionInput.addEventListener("keydown", event => {
+  if (event.key === "Enter") {
+    handleAsk();
   }
 });
