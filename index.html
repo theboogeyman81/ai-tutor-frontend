@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Curio – AI Owl Tutor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
 
@@ -43,7 +45,6 @@
       backdrop-filter: blur(6px);
     }
 
-    /* Initial state: center the left panel */
     .container.start .left-panel {
       width: 100vw;
       justify-content: center;
@@ -55,7 +56,6 @@
       display: none;
     }
 
-    /* Active state after input: side-by-side layout */
     .container.active .left-panel {
       width: 50vw;
       display: flex;
@@ -85,12 +85,27 @@
     .mascot {
       font-size: 4rem;
       margin-bottom: 10px;
-      animation: bounce 1.8s infinite;
+      animation: bounce 1.8s infinite, blink 6s infinite, float 4s ease-in-out infinite, mascotGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes mascotGlow {
+      0%, 100% { filter: drop-shadow(0 0 5px #fff6a1); }
+      50% { filter: drop-shadow(0 0 15px #ffe066); }
     }
 
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
+    }
+
+    @keyframes blink {
+      0%, 90%, 100% { opacity: 1; }
+      95% { opacity: 0.2; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
     }
 
     h1 {
@@ -115,10 +130,16 @@
       color: #ffffff;
       outline: none;
       margin-bottom: 15px;
+      transition: all 0.3s ease;
     }
 
     input::placeholder {
       color: #f0d9ff;
+    }
+
+    input:focus {
+      border-color: #ffb703;
+      background-color: rgba(255, 255, 255, 0.3);
     }
 
     button {
@@ -129,6 +150,7 @@
       font-size: 1rem;
       border-radius: 14px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
     button:hover {
@@ -146,7 +168,11 @@
       overflow-y: auto;
     }
 
-    /* Scrollbar */
+    #typingText {
+      display: inline;
+      white-space: pre-line;
+    }
+
     .right-panel::-webkit-scrollbar, .left-panel::-webkit-scrollbar {
       width: 8px;
     }
@@ -162,6 +188,9 @@
   </style>
 </head>
 <body>
+  <!-- Sparkle effect container -->
+  <div id="sparkle-container" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:999;"></div>
+
   <div class="container start" id="mainContainer">
     <!-- Left Panel -->
     <div class="left-panel">
@@ -177,12 +206,16 @@
     <!-- Right Panel -->
     <div class="right-panel">
       <div id="answer">
-        💡 I'm here to help! Ask me something fun like "What is gravity?" or "Why is the sky blue?" 🌈
+        <span id="typingText">💡 I'm here to help! Ask me something fun like "What is gravity?" or "Why is the sky blue?" 🌈</span>
       </div>
     </div>
   </div>
 
   <!-- External JS file -->
   <script src="script.js"></script>
+  <!-- Optional Sounds -->
+  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+  <audio id="answerSound" src="ding.mp3" preload="auto"></audio>
+  <audio id="errorSound" src="error.mp3" preload="auto"></audio>
 </body>
 </html>
